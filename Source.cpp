@@ -30,9 +30,11 @@ void convertSecondsToYearsDaysHours(long long seconds) {
 int counter = 0;
 
 template <class T>
-void moveDisk(Stackt<T>& source, Stackt<T>& destination) {
+void moveDisk(Stackt<T>& source, Stackt<T>& destination, const string& sourceName, const string& destName) {
 	T disk = source.pop();
 	destination.push(disk);
+	cout << "Disk " << disk << " moved from " << sourceName << " to " << destName << endl;
+
 }
 
 // Recursive Tower of Hanoi function
@@ -42,15 +44,15 @@ int towerOfHanoi(int size, Stackt<T>& source, Stackt<T>& destination, Stackt<T>&
 	
 
 	if (size == 1) {
-		moveDisk(source, destination);
+		moveDisk(source, destination, sourceName, destName);
 		counter++;
 	}
 	else {
 		
 		towerOfHanoi(size - 1, source, auxiliary, destination);
-		moveDisk(source, destination);
+		moveDisk(source, destination, sourceName, destName)
 		counter++;
-		towerOfHanoi(size - 1, auxiliary, destination, source);
+		towerOfHanoi(size - 1, auxiliary, destination, source, auxName, destName, sourceName);
 	}
 	return counter;
 }
@@ -73,9 +75,17 @@ int main() {
 		for (int i = 1; i < size + 1; i++)
 			rod1.push(i);
 
+		cout << "Initial state of the rods:" << endl;
+		rod1.printStack();
+		rod2.printStack();
+		rod3.printStack();
 
-		towerOfHanoi(size, rod1, rod3, rod2);
-		cout << "the number of moves is " << counter << endl;
+		int counter = towerOfHanoi(size, rod1, rod3, rod2, "A", "C", "B");
+
+		cout << "The number of moves is " << counter << endl;
+		cout << "Final state of the rods:" << endl;
+		rod1.printStack();
+		rod2.printStack();
 		rod3.printStack();
 	}
 	else if (choice == 2) {
@@ -84,6 +94,7 @@ int main() {
 		Stackt<long long> rod3(64);
 		for (long long i = 1; i < 65; i++)
 			rod1.push(i);
+
 
 		int moves = towerOfHanoi(64, rod1, rod3, rod2);
 		cout << "The number of moves is " << moves << endl;
